@@ -62,10 +62,10 @@ class Treap<E extends Comparable<E>>
         TreapNode<E> Right = root.right;
         TreapNode<E> Left = root.right.left;
 
-        Right.left = root;
-        root.right = Left;
+        Right.left = root;  //Make the reference of the old right's left (new root's left) to be the old root
+        root.right = Left;  //We make the right of the old root's right be the left of the new root
 
-        this.root = Right;
+        this.root = Right;      //Root is new root
         return Right;
     }
 
@@ -141,6 +141,9 @@ class Treap<E extends Comparable<E>>
                 //in this case, the node has no kids and no one loves it, so you can easily kill it
             }
 
+            //Here, we have 2 kids so we rotate crap until 2 kids are not had!
+            //We do not need to get to the bottom of the tree or to a leaf,
+            //Just somewhere where it has just 1 kid
             else if(root.left != null && root.right != null){
                 //The node has a loving family, and you are a monster who wants to kill it, so you
                 //have a lot of work to do
