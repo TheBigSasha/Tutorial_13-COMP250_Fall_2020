@@ -71,6 +71,11 @@ class Treap<E extends Comparable<E>>
 
 
     public TreapNode<E> rotateRight(TreapNode<E> root) {
+
+        //In this situation, we are one level of recursion higher, and root is acting kinda like parent
+        //Why? This is less confusing and there are less pointers to stuff~!
+
+        //When we rotate, we swap parent for child, and reroot. So we can swap arent with left, in this case
         TreapNode<E> left = root.left;
         TreapNode<E> right = root.left.right;
 
@@ -113,16 +118,18 @@ class Treap<E extends Comparable<E>>
     public void add(E key){
         root = add(root, key);
     }
-
-    public TreapNode<E> delete(TreapNode<E> root, E key) {
-        if(root == null){
+    //This is a helper method because:
+    //It helps in the delete method which does not return anything
+    //It is not designed for the user to ever see it!
+    private TreapNode<E> delete(TreapNode<E> root, E key) {
+        if(root == null){           //BASE CASE, EASY PEASY LEMON SQUEEZEY
             return null;
         }
 
         //Here we search for what we are removing
-        if(key.compareTo(root.data) < 0){
+        if(key.compareTo(root.data) < 0){          //NAVIGATE TO THE ONE WE ARE TRYING TO DELETE
             root.left = delete(root.left,key);
-        } else if(key.compareTo(root.data) > 0){
+        } else if(key.compareTo(root.data) > 0){    //also navigate but the other direction
             root.right = delete(root.right,key);
         }
 
@@ -131,28 +138,40 @@ class Treap<E extends Comparable<E>>
             //Base case, easy to kill when they have no children who will miss them
             if(root.left == null && root.right == null){
                 root = null;
+                //in this case, the node has no kids and no one loves it, so you can easily kill it
             }
 
             else if(root.left != null && root.right != null){
+                //The node has a loving family, and you are a monster who wants to kill it, so you
+                //have a lot of work to do
 
                 if(root.left.priority < root.right.getPriority()){
-                    root = rotateLeft(root);
+                    root = rotateLeft(root);        //Here we rotate so the heap stays a heap and so that our node is easy to remove
+
+                    //Rotating it down to a place where it is easier to delete, and swapping it with its lowest prioirty child
 
                     root.left = delete(root.left, key);
                 }else{
                     root = rotateRight(root);
+
+                    //Still the same as above, rotating it down to the place where it is ez to kill, but the other child has priority.
 
                     root.right = delete(root.right,key);
                 }
             }
 
             else{
+                //Just one child is present
                 TreapNode<E> child;
                 if(root.left != null) {
+                        //if the left child is present, swap with its left
                      child = root.left;
                 }else{
+                    //if the right child is present, swap with right
                     child = root.right;
                 }
+
+                //Swap the node and its child, but swap I mean replace
                 root = child;
             }
         }

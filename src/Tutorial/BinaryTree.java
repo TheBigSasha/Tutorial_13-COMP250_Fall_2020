@@ -173,7 +173,6 @@ public class BinaryTree<E extends Comparable<E>> implements Iterable<E> {
 
     class BTreeIterator implements Iterator<E>{
         private final Stack<E> inOrder = reverseOrder();
-        private TreeNode<E> root = BinaryTree.this.root.left;
         @Override
         public boolean hasNext() {
 
